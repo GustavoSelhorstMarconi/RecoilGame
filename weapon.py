@@ -1,7 +1,7 @@
 import pygame, math
 
 class Weapon(pygame.sprite.Sprite):
-  def __init__(self, player, groups):
+  def __init__(self, player, groups, type_sprite):
     super().__init__(groups)
     self.image_2 = pygame.image.load('images/weapon.png').convert_alpha()
     self.image_2 = pygame.transform.rotate(self.image_2, 90)
@@ -9,6 +9,7 @@ class Weapon(pygame.sprite.Sprite):
     self.rect = self.image.get_rect(midleft = player.rect.center)
     self.player = player
     self.display_surface = pygame.display.get_surface()
+    self.type = type_sprite
 
     # Shoot
     self.distance = pygame.math.Vector2()
