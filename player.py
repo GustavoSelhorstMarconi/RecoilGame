@@ -14,7 +14,9 @@ class Player(pygame.sprite.Sprite):
     # Status
     self.hp = 1
 
-    # Fall
+    # Movement
+    self.speed_x = 5
+    self.speed_y = 7
     self.gravity = 0.1
   
   def fall(self):
@@ -24,8 +26,8 @@ class Player(pygame.sprite.Sprite):
     self.rect.center += self.direction
   
   def move_shoot(self, distance):
-    self.direction.x = distance.x * -5
-    self.direction.y = distance.y * -7
+    self.direction.x = distance.x * -self.speed_x
+    self.direction.y = distance.y * -self.speed_y
   
   def detect_screen(self):
     if self.rect.midleft[0] >= screen_width:
