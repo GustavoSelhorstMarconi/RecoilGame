@@ -142,8 +142,3 @@ class Level():
       self.change_index_selected_menu()
       self.change_selected_menu()
       self.select_exit_option()
-      keys = pygame.key.get_pressed()
-      '''if keys[pygame.K_SPACE]:
-        self.player = Player((screen_width / 2, screen_height / 2), self.visible_sprites, self.collision_sprites, 'Player')
-        self.weapon = Weapon(self.player, self.visible_sprites, 'Weapon')
-        self.reset_level()'''
