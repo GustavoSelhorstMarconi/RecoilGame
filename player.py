@@ -10,6 +10,7 @@ class Player(pygame.sprite.Sprite):
     self.direction = pygame.math.Vector2()
     self.collision_sprites = collision_sprites
     self.type = type_sprite
+    self.display_surface = pygame.display.get_surface()
 
     # Status
     self.hp = 1

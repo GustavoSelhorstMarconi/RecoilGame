@@ -8,17 +8,27 @@ class Enemy(pygame.sprite.Sprite):
     self.type = type_sprite
     self.player = player
     self.change_text_kill = change_text_kill
+    self.visible_sprites = groups[0]
     
     # Movement
     self.speed = speed
     self.direction = pygame.math.Vector2()
   
   def check_kill(self):
-    if pygame.mouse.get_pressed()[0]:
+    '''if pygame.mouse.get_pressed()[0]:
       mouse_pos = pygame.mouse.get_pos()
       if self.rect.collidepoint(mouse_pos):
         self.kill()
-        self.change_text_kill()
+        self.change_text_kill()'''
+
+    for sprite in self.visible_sprites.sprites():
+      if sprite.type == 'Weapon':
+        if sprite.list_points_distance:
+          for point in sprite.list_points_distance:
+            if self.rect.collidepoint(point):
+              self.kill()
+              self.change_text_kill()
+              return
 
   def find_direction(self):
     self.direction.x = self.player.rect.centerx - self.rect.centerx

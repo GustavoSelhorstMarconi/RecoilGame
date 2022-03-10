@@ -122,11 +122,11 @@ class Level():
             self.player = Player((screen_width / 2, screen_height / 2), self.visible_sprites, self.collision_sprites, 'Player')
             self.weapon = Weapon(self.player, self.visible_sprites, 'Weapon')
             self.reset_level()
-          if self.menu_list[1].selected:
           # Exit option
+          if self.menu_list[1].selected:
             pygame.quit()
-            sys.exit()        
-      
+            sys.exit()
+ 
   def run(self):
     if 'Level' in self.status:
       self.visible_sprites.update()

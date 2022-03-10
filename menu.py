@@ -6,7 +6,7 @@ class Item:
     self.rect = pygame.Rect(left, top, width, height)
     self.index = index
     self.font = pygame.font.Font(None, 20)
-    self.text = self.font.render(text, True, (0, 0, 0))
+    self.text_surf = self.font.render(text, True, (0, 0, 0))
     
     self.selected = False
     self.selectedColor = (255, 0, 0)
@@ -21,4 +21,4 @@ class Item:
     pygame.draw.rect(self.display_surface, self.color, self.rect)
   
   def display_text(self):
-    self.display_surface.blit(self.text, self.rect.center - pygame.math.Vector2(15, 7))
+    self.display_surface.blit(self.text_surf, (self.rect.centerx - self.text_surf.get_width() / 2, self.rect.centery - self.text_surf.get_height() / 2))

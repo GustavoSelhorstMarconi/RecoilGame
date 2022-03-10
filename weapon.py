@@ -13,6 +13,7 @@ class Weapon(pygame.sprite.Sprite):
 
     # Shoot
     self.distance = pygame.math.Vector2()
+    self.list_points_distance = []
 
     # Timer shoot
     self.can_shoot = True
@@ -43,8 +44,21 @@ class Weapon(pygame.sprite.Sprite):
       self.distance.x = mouse_pos[0] - self.rect.centerx
       self.distance.y = mouse_pos[1] - self.rect.centery
       
-      distance = pygame.math.Vector2(self.distance.normalize())
-      self.player.move_shoot(distance)
+      vec_distance = pygame.math.Vector2(self.distance.normalize())
+      self.create_line_shoot(vec_distance, self.distance.magnitude())
+      self.player.move_shoot(vec_distance)
+  
+  def create_line_shoot(self, vec_distance, distance):
+    self.list_points_distance = []
+
+    for i in range(int(distance)):
+      self.list_points_distance.append(self.rect.center + vec_distance * i)
+    
+    pygame.draw.lines(self.display_surface, (0, 0, 139), False, self.list_points_distance, 5)
+
+  def clean_shoot_points(self):
+    if self.can_shoot:
+      self.list_points_distance = []
   
   def timer(self):
     current_time = pygame.time.get_ticks()
@@ -58,3 +72,4 @@ class Weapon(pygame.sprite.Sprite):
     self.movement()
     self.timer()
     self.shoot()
+    self.clean_shoot_points()
