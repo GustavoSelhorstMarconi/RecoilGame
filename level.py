@@ -5,6 +5,7 @@ from settings import *
 from weapon import Weapon
 from enemy import Enemy
 from menu import Item
+from status import Status
 
 class Level():
   def __init__(self):
@@ -38,6 +39,9 @@ class Level():
     self.menu_list = []
     self.menu_text_list = ['Start', 'Exit']
     self.selected_menu_index = 0
+    self.can_click_menu = True
+    self.click_menu_time = None
+    self.click_menu_delay = 300
   
   def check_kill(self):
     if self.player.rect.centery >= screen_height or self.player.hp <= 0:
@@ -50,9 +54,12 @@ class Level():
     if str(self.level) in self.status and not self.collision_sprites:
       amount_enemies = self.level - 1 if self.level != 1 else 1
       for i in range(random.randint(amount_enemies - 1, amount_enemies + 1)):
-        pos = (random.randint(0, screen_width), random.randint(0, screen_height))
+        aux_pos = (random.randint(0, screen_width), random.randint(0, screen_height))
+        rect_aux = pygame.Rect(*aux_pos, 20, 20)
+        pos = aux_pos if not self.player.rect.colliderect(rect_aux) else self.player.rect.center + pygame.math.Vector2(100, 100)
         Enemy(pos, [self.visible_sprites, self.collision_sprites], 'Enemy', self.player, 1.5 + (self.level / 10), self.change_text_kill)
         self.aux_enemy_kill = self.enemy_kill + len(self.collision_sprites.sprites())
+      self.player.change_shoot_available()
     
     '''# Level 2
     if self.status == 'Level_2' and not self.collision_sprites:
@@ -85,6 +92,8 @@ class Level():
     self.level = 1
     self.enemy_kill = -1
     self.change_text_kill()
+    self.player.shoot_available = 0
+    self.player.status.change_text_shoot_available()
     self.create_enemy()
 
   def create_menu_death(self):
@@ -112,11 +121,13 @@ class Level():
         else:
           menu.selected = False
 
-  def select_exit_option(self):
+  def select_menu_options(self):
     keys = pygame.key.get_pressed()
     if self.menu_list:
       for menu in self.menu_list:
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and self.can_click_menu:
+          self.click_menu_time = pygame.time.get_ticks()
+          self.can_click_menu = False
           # Start Option
           if self.menu_list[0].selected:
             self.player = Player((screen_width / 2, screen_height / 2), self.visible_sprites, self.collision_sprites, 'Player')
@@ -126,6 +137,13 @@ class Level():
           if self.menu_list[1].selected:
             pygame.quit()
             sys.exit()
+
+  def timer(self):
+    current_time = pygame.time.get_ticks()
+
+    if not self.can_click_menu:
+      if current_time - self.click_menu_time >= self.click_menu_delay:
+        self.can_click_menu = True
  
   def run(self):
     if 'Level' in self.status:
@@ -141,4 +159,5 @@ class Level():
       self.display_menu_death()
       self.change_index_selected_menu()
       self.change_selected_menu()
-      self.select_exit_option()
+      self.select_menu_options()
+      self.timer()

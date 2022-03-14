@@ -3,7 +3,7 @@ import pygame, math
 class Weapon(pygame.sprite.Sprite):
   def __init__(self, player, groups, type_sprite):
     super().__init__(groups)
-    self.image_2 = pygame.image.load('images/weapon.png').convert_alpha()
+    self.image_2 = pygame.image.load('images/weapons/weapon2.png').convert_alpha()
     self.image_2 = pygame.transform.rotate(self.image_2, 90)
     self.image = self.image_2
     self.rect = self.image.get_rect(midleft = player.rect.center)
@@ -36,9 +36,11 @@ class Weapon(pygame.sprite.Sprite):
     self.rect = self.image.get_rect(center = self.rect.center)
   
   def shoot(self):
-    if pygame.mouse.get_pressed()[0] and self.can_shoot:
+    if pygame.mouse.get_pressed()[0] and self.can_shoot and self.player.shoot_available >= 1:
       self.can_shoot = False
       self.shoot_time = pygame.time.get_ticks()
+      self.player.shoot_available -= 1
+      self.player.status.change_text_shoot_available()
 
       mouse_pos = pygame.mouse.get_pos()
       self.distance.x = mouse_pos[0] - self.rect.centerx
@@ -54,7 +56,7 @@ class Weapon(pygame.sprite.Sprite):
     for i in range(int(distance)):
       self.list_points_distance.append(self.rect.center + vec_distance * i)
     
-    pygame.draw.lines(self.display_surface, (0, 0, 139), False, self.list_points_distance, 5)
+    pygame.draw.line(self.display_surface, (31, 174, 209), self.list_points_distance[0], self.list_points_distance[-1] , 5)
 
   def clean_shoot_points(self):
     if self.can_shoot:
